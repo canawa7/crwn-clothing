@@ -17,7 +17,7 @@ const MenuItem = ({title, imageUrl, size, history, linkUrl, match}) => (
 );
 
 export default withRouter(MenuItem);
+//withRouter is used to super power the MenuItem so that it can receive the history and match for routing
 
 // onClick={() => history.push(`${match.url}${linkUrl}`)}
-
 // /somematchedURL/linkUrl

@@ -7,7 +7,7 @@ import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 
-import {auth} from './firebase/firebase.utils';
+import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 
 // const HatsPage = () => (
 //   <div>
@@ -28,10 +28,39 @@ class App extends React.Component{
   unsubsribeFromAuth = null;
 
   componentDidMount(){
-    this.unsubsribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user});
+    //'user' is the state of the user whether it's signed in, signed out or null
+    this.unsubsribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      // this.setState({ currentUser: user});
+      // createUserProfileDocument(user); //Received the data about the user from firebase
+      // console.log(user);
+      // console.log(userAuth);
 
-      console.log(user);
+      if(userAuth){
+        const userRef = await createUserProfileDocument(userAuth);
+
+        //Representing the snapshot object of the data
+        //Listen to userRef about any changes of this data but also get back the first state of that data
+        userRef.onSnapshot(snapShot => {
+          // console.log(snapShot);
+          // console.log(snapShot.data());
+          
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          }, () => {
+            console.log(this.state);
+            //The only way we can console log from a setState is by passing a second parameter to setState to make sure that it's done first then console log
+          })
+
+          console.log(this.state);
+          
+        });
+        
+      } else {
+        this.setState({ currentUser: userAuth });
+      }
       
     });
   }

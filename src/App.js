@@ -9,6 +9,9 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up
 
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 
+import {connect} from 'react-redux';
+import {setCurrentUser} from './redux/user/user.action';
+
 // const HatsPage = () => (
 //   <div>
 //     <h1>HATS PAGE</h1>
@@ -17,17 +20,22 @@ import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 
 class App extends React.Component{
   
-  constructor(){
-    super();
+  // constructor(){
+  //   super();
 
-    this.state = {
-      currentUser: null
-    }
-  }
+  //   this.state = {
+  //     currentUser: null
+  //   }
+  // }
 
   unsubsribeFromAuth = null;
 
+  //The onAuthStateChanged return the unsubsribe function 
+  //https://stackoverflow.com/questions/37370224/firebase-stop-listening-onauthstatechanged
+
   componentDidMount(){
+    const {setCurrentUser} = this.props;
+
     //'user' is the state of the user whether it's signed in, signed out or null
     this.unsubsribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // this.setState({ currentUser: user});
@@ -44,28 +52,38 @@ class App extends React.Component{
           // console.log(snapShot);
           // console.log(snapShot.data());
           
-          this.setState({
-            currentUser: {
-              id: snapShot.id,
-              ...snapShot.data()
-            }
-          }, () => {
-            console.log(this.state);
-            //The only way we can console log from a setState is by passing a second parameter to setState to make sure that it's done first then console log
-          })
+          // this.setState({
+          //   currentUser: {
+          //     id: snapShot.id,
+          //     ...snapShot.data()
+          //   }
+          // }, () => {
+          //   // console.log(this.state);
+          //   //The only way we can console log from a setState is by passing a second parameter to setState to make sure that it's done first then console log
+          // })
 
-          console.log(this.state);
+          setCurrentUser({
+            id: snapShot.id,
+            ...snapShot.data()
+          });
+
+          // console.log(this.state);
           
         });
         
       } else {
-        this.setState({ currentUser: userAuth });
+        // this.setState({ currentUser: userAuth });
+        setCurrentUser(userAuth);
       }
       
     });
+
+    console.log(this.unsubsribeFromAuth);
+    
   }
 
   componentWillUnmount(){
+    // console.log(this.unsubsribeFromAuth());
     this.unsubsribeFromAuth();
   }
 
@@ -73,7 +91,7 @@ class App extends React.Component{
   render(){
     return (
       <div>
-        <Header currentUser={this.state.currentUser}/>
+        <Header/>
         <Switch>
           <Route exact={true} path='/' component={HomePage}/>
           <Route exact path='/shop' component={ShopPage} />
@@ -84,7 +102,11 @@ class App extends React.Component{
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+
+export default connect(null, mapDispatchToProps)(App);
 
 
 //exact is a true or false property. This path must be exactly '/' in order for the component to render.
@@ -100,3 +122,6 @@ export default App;
 //     </div>
 //   );
 // }
+
+
+// <Header currentUser={this.state.currentUser}/>

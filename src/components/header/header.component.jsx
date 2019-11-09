@@ -5,7 +5,10 @@ import {ReactComponent as Logo} from '../../assets/crown.svg';
 
 import {auth} from '../../firebase/firebase.utils';
 
-const Header = (props) => (
+import {connect} from 'react-redux';
+//To have access to redux we use connect
+
+const Header = ({currentUser}) => (
     <div className='header'>
         <Link to='/' className='logo-container'>
             <Logo className='logo'/>
@@ -14,7 +17,7 @@ const Header = (props) => (
             <Link to='/shop' className='option'>SHOP</Link>
             <Link to='/shop' className='option'>CONTACT</Link>
             {
-                props.currentUser ? 
+                currentUser ? 
                 <div className='option' onClick={() => auth.signOut()}>SIGN OUT</div>
                 :
                 <Link className='option' to='/signin'>SIGN IN</Link>
@@ -23,4 +26,9 @@ const Header = (props) => (
     </div>
 );
 
-export default Header;
+//To access the currentUser value from reducer
+const mapStateToProps = (state) => ({
+    currentUser: state.user.currentUser 
+})
+
+export default connect(mapStateToProps)(Header);

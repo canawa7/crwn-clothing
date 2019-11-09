@@ -8,7 +8,10 @@ import {auth} from '../../firebase/firebase.utils';
 import {connect} from 'react-redux';
 //To have access to redux we use connect
 
-const Header = ({currentUser}) => (
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown';
+
+const Header = (props) => (
     <div className='header'>
         <Link to='/' className='logo-container'>
             <Logo className='logo'/>
@@ -17,18 +20,34 @@ const Header = ({currentUser}) => (
             <Link to='/shop' className='option'>SHOP</Link>
             <Link to='/shop' className='option'>CONTACT</Link>
             {
-                currentUser ? 
-                <div className='option' onClick={() => auth.signOut()}>SIGN OUT</div>
+                props.currentUser_prop ? 
+                (<div className='option' onClick={() => auth.signOut()}>SIGN OUT</div>)
                 :
-                <Link className='option' to='/signin'>SIGN IN</Link>
+                (<Link className='option' to='/signin'>SIGN IN</Link>)
             }
+            <CartIcon/>
         </div>
+        {
+            props.cart_hidden_prop ? null : <CartDropdown /> //If hidden is true the hide, if false, the show the dropdown
+        }
+
+        
     </div>
 );
 
 //To access the currentUser value from reducer
+//This function will return an object where the property are the property that we want to pass in to the Header component
+
+
+//The input of this function is the state object or the root-reducer
 const mapStateToProps = (state) => ({
-    currentUser: state.user.currentUser 
+    currentUser_prop: state.user.currentUser,
+    cart_hidden_prop: state.cart.hidden
 })
 
+//by passing the mapStateToProps to connect, we're getting the value of the current 
+//user from user.reducer as a prop to the header component
 export default connect(mapStateToProps)(Header);
+
+//user.reducer -> root-reducer -> Header
+//The header is getting the value from user.reducer

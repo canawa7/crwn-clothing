@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import {BrowserRouter} from 'react-router-dom';
+
 import {Provider} from 'react-redux';
 import store from './redux/store';
 
@@ -18,3 +19,6 @@ ReactDOM.render(
     );
 
 
+//Need the store prop so the App can access all the root reducer
+
+//Action -> Middleware -> Root-reducer -> Store -> React

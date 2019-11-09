@@ -11,7 +11,7 @@ import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 
 import {connect} from 'react-redux';
 import {setCurrentUser} from './redux/user/user.action';
-
+//We need the App to update the currentUser value using the user.action 
 
 
 // const HatsPage = () => (
@@ -36,7 +36,8 @@ class App extends React.Component{
   //https://stackoverflow.com/questions/37370224/firebase-stop-listening-onauthstatechanged
 
   componentDidMount(){
-    const {setCurrentUser} = this.props;
+    const {setCurrentUser_prop} = this.props;
+    //If not being destructurized, we have to write it like this: this.props.serCurrentUser_prop
 
     //'user' is the state of the user whether it's signed in, signed out or null
     this.unsubsribeFromAuth = auth.onAuthStateChanged(async userAuth => {
@@ -64,7 +65,7 @@ class App extends React.Component{
           //   //The only way we can console log from a setState is by passing a second parameter to setState to make sure that it's done first then console log
           // })
 
-          setCurrentUser({
+          setCurrentUser_prop({
             id: snapShot.id,
             ...snapShot.data()
           });
@@ -75,7 +76,7 @@ class App extends React.Component{
         
       } else {
         // this.setState({ currentUser: userAuth });
-        setCurrentUser(userAuth);
+        setCurrentUser_prop(userAuth);
       }
       
     });
@@ -97,20 +98,34 @@ class App extends React.Component{
         <Switch>
           <Route exact={true} path='/' component={HomePage}/>
           <Route exact path='/shop' component={ShopPage} />
-          <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to='/'/>) : (<SignInAndSignUpPage/>)}/>
+          <Route exact path='/signin' render={() => this.props.currentUser_prop ? (<Redirect to='/'/>) : (<SignInAndSignUpPage/>)}/>
         </Switch>
       </div>
     );  
   }
 }
 
+//We use this to for when the App receives a value from the currentUser (or state is true), we redirect to the home page
+//If null, then the user can access the SignUpAndSignInPage
 const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+  currentUser_prop: user.currentUser
 });
 
+//We connect the App to connect() using the second argument which is the mapDispatchToProps
+//This function returns an object where the prop name is the prop that the App will receive
+//This prop dispatched the new action that we're gonna pass which is setCurrentUser
+
 const mapDispatchToProps = (dispatch) => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  //It goes to a function the gets the user object
+  //and then call dispatch() -> it is a way for redux to say whatever object you're passing me, it is gonna be the action object
+  //that I'm gonna pass to every reducer
+
+  //This user_object_app is gonna be used as the payload
+  //And the user_object_app is from snapShot or userAuth above
+  setCurrentUser_prop: user_object_app => dispatch(setCurrentUser(user_object_app))
 });
+  
+//In the beginning, since we only need the App to set the value, we don't need the first argument to receive the value from the user.reducer, so we can put null
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
 
@@ -132,4 +147,4 @@ export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 // <Header currentUser={this.state.currentUser}/>
 
-// <Route exact path='/signin' component={SignInAndSignUpPage}/>
+// <Route exact path='/signin' component={SignInAndSignUpPage}/> 

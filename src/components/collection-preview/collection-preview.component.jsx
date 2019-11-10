@@ -10,8 +10,8 @@ const CollectionPreview = ({title, items}) => (
             {
                 items
                 .filter((item, idx) => idx < 4)
-                .map(({id, ...otherItemProps}) => (
-                    <CollectionItem key={id} {...otherItemProps}/>
+                .map((item) => (
+                    <CollectionItem key={item.id} item_prop={item}/>
                 ))
             }
         </div>
@@ -19,3 +19,15 @@ const CollectionPreview = ({title, items}) => (
 );
 
 export default CollectionPreview;
+
+
+//Before using Redux
+// <div className='preview'>
+// {
+//     items
+//     .filter((item, idx) => idx < 4)
+//     .map(({id, ...otherItemProps}) => (
+//         <CollectionItem key={id} {...otherItemProps}/>
+//     ))
+// }
+// </div>

@@ -51,3 +51,11 @@ export default connect(mapStateToProps)(Header);
 
 //user.reducer -> root-reducer -> Header
 //The header is getting the value from user.reducer
+
+
+//Advanced destructuring
+//Give me the currentUser value off of the user and the hidden value off of the cart
+// const mapStateToProps = ({user: {currentUser}, cart: {hidden}}) => ({
+//     currentUser,
+//     hidden
+// })

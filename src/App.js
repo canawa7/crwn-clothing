@@ -81,7 +81,7 @@ class App extends React.Component{
       
     });
 
-    console.log(this.unsubsribeFromAuth);
+    // console.log(this.unsubsribeFromAuth);
     
   }
 

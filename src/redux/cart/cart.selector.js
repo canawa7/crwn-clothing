@@ -13,7 +13,6 @@ export const selectCartItems = createSelector(
     (cart_i) => cart_i.cartItems
 );
 
-
 export const selectCartItemsCount = createSelector(
     [selectCartItems],
     (cartItems) => cartItems.reduce(
@@ -23,3 +22,17 @@ export const selectCartItemsCount = createSelector(
 //When using the selectCartItemsCount, the sequence goes like this:
 //selectCartItemsCount -> [selectCartItems] -> selectCartItems -> [selectCart] -> selectCart -> state.cart -> cart_i.cartItems -> cartItems -> then itemCount in cart-icon.component 
 
+export const selectCartHidden = createSelector(
+    [selectCart],
+    cart => cart.hidden
+);
+
+export const selectCartTotal = createSelector(
+    [selectCartItems],
+    cartItems =>
+      cartItems.reduce(
+        (accumalatedQuantity, cartItem) =>
+          accumalatedQuantity + cartItem.quantity * cartItem.price,
+        0
+      )
+  );

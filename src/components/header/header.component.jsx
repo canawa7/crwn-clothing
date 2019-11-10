@@ -11,6 +11,10 @@ import {connect} from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown';
 
+import {createStructuredSelector} from 'reselect';
+import {selectCartHidden} from '../../redux/cart/cart.selector';
+import {selectCurrentUser} from '../../redux/user/user.selector';
+
 const Header = (props) => (
     <div className='header'>
         <Link to='/' className='logo-container'>
@@ -30,8 +34,6 @@ const Header = (props) => (
         {
             props.cart_hidden_prop ? null : <CartDropdown /> //If hidden is true the hide, if false, the show the dropdown
         }
-
-        
     </div>
 );
 
@@ -39,11 +41,18 @@ const Header = (props) => (
 //This function will return an object where the property are the property that we want to pass in to the Header component
 
 
-//The input of this function is the state object or the root-reducer
-const mapStateToProps = (state) => ({
-    currentUser_prop: state.user.currentUser,
-    cart_hidden_prop: state.cart.hidden
-})
+//The input of this function is the state object of the root-reducer
+// const mapStateToProps = (state) => ({
+//     currentUser_prop: selectCurrentUser(state),
+//     cart_hidden_prop: selectCartHidden(state)
+// });
+
+//or
+const mapStateToProps = createStructuredSelector({
+    currentUser_prop: selectCurrentUser,
+    cart_hidden_prop: selectCartHidden
+});
+
 
 //by passing the mapStateToProps to connect, we're getting the value of the current 
 //user from user.reducer as a prop to the header component
@@ -58,4 +67,10 @@ export default connect(mapStateToProps)(Header);
 // const mapStateToProps = ({user: {currentUser}, cart: {hidden}}) => ({
 //     currentUser,
 //     hidden
+// })
+
+//Before using selector
+// const mapStateToProps = (state) => ({
+//     currentUser_prop: state.user.currentUser,
+//     cart_hidden_prop: state.cart.hidden
 // })

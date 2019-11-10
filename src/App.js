@@ -6,12 +6,15 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
+import CheckoutPage from "./pages/checkout/checkout.component";
 
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 
 import {connect} from 'react-redux';
 import {setCurrentUser} from './redux/user/user.action';
 //We need the App to update the currentUser value using the user.action 
+import {selectCurrentUser} from './redux/user/user.selector';
+import {createStructuredSelector} from 'reselect';
 
 
 // const HatsPage = () => (
@@ -98,6 +101,7 @@ class App extends React.Component{
         <Switch>
           <Route exact={true} path='/' component={HomePage}/>
           <Route exact path='/shop' component={ShopPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
           <Route exact path='/signin' render={() => this.props.currentUser_prop ? (<Redirect to='/'/>) : (<SignInAndSignUpPage/>)}/>
         </Switch>
       </div>
@@ -107,8 +111,8 @@ class App extends React.Component{
 
 //We use this to for when the App receives a value from the currentUser (or state is true), we redirect to the home page
 //If null, then the user can access the SignUpAndSignInPage
-const mapStateToProps = ({ user }) => ({
-  currentUser_prop: user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser_prop: selectCurrentUser
 });
 
 //We connect the App to connect() using the second argument which is the mapDispatchToProps
@@ -148,3 +152,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(App);
 // <Header currentUser={this.state.currentUser}/>
 
 // <Route exact path='/signin' component={SignInAndSignUpPage}/> 
+
+
+// const mapStateToProps = ({ user }) => ({
+//   currentUser_prop: user.currentUser
+// });

@@ -1,5 +1,5 @@
 import CartActionTypes from './cart.types';
-import {addItemToCartUtil} from './cart.utils';
+import {addItemToCartUtil, removeItemFromCart} from './cart.utils';
 
 const INTIAL_STATE = {
     hidden: true,
@@ -12,7 +12,7 @@ const cartReducer = (state = INTIAL_STATE, action ) => {
             return{
                 ...state,
                 hidden: !state.hidden
-            }
+            };
             
         case CartActionTypes.ADD_ITEM:
             return{
@@ -21,7 +21,19 @@ const cartReducer = (state = INTIAL_STATE, action ) => {
                 //Spreading in all the existing array values and add the new value at the end
 
                 cartItems: addItemToCartUtil(state.cartItems, action.payload)
-            }
+            };
+
+        case CartActionTypes.CLEAR_ITEM_FROM_CART:
+            return{
+                ...state,
+                cartItems: state.cartItems.filter(cartImte => cartImte.id !== action.payload.id)
+                //Keep the id that does not match
+            };
+        case CartActionTypes.REMOVE_ITEM:
+            return{
+                ...state,
+                cartItems: removeItemFromCart(state.cartItems, action.payload)
+            };
         default:
             return state;
     }

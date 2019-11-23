@@ -9,6 +9,8 @@ import './collection.styles.scss';
 
 const CollectionPage = ({ collection_prop }) => {
   const { title, items } = collection_prop;
+  console.log(collection_prop);
+  
   return (
     <div className='collection-page'>
       <h2 className='title'>{title}</h2>
@@ -20,6 +22,9 @@ const CollectionPage = ({ collection_prop }) => {
     </div>
   );
 };
+
+//The second parameters of mapStateToProps is the props from the CollectionPage component that it gets from its parrnt element
+//The state is returning the createSelector function from shop.selector
 
 const mapStateToProps = (state, ownProps) => ({
   collection_prop: selectCollection(ownProps.match.params.collectionId)(state)

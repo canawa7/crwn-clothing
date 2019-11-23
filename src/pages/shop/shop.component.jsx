@@ -63,8 +63,10 @@ import CollectionPage from '../collection/collection.component';
 const ShopPage = ({ match }) => (
   <div className='shop-page'>
     <Route exact path={`${match.path}`} component={CollectionsOverview} />
-    <Route path={`${match.path}/:collectionId`} render={CollectionPage} />
+    <Route path={`${match.path}/:collectionId`} component={CollectionPage} />
   </div>
 );
 
 export default ShopPage;
+
+// https://stackoverflow.com/questions/53999413/nested-routes-in-react-router-v4-not-rendering-as-expected
